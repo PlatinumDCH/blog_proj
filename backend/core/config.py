@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import ConfigDict
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = 'Project-Blog'
@@ -7,17 +8,16 @@ class Settings(BaseSettings):
     POSTGRES_USER:str = 'test'
     POSTGRES_PASSWORD:str = 'test'
     POSTGRES_SERVER:str = 'localhost'
-    POSTGRES_PORT:int = 5432
+    POSTGRES_PORT:str = '5432'
     POSTGRES_DB:str = 'blog_db'
-    DATABASE_URL = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}'
+    DATABASE_URL:str = 'DatabaseUrl'
 
     model_config = SettingsConfigDict(
-        extra='ignore'
-    )
+        extra="ignore", env_file=".env", env_file_encoding="utf-8"
+    )  # noqa
 
-    class Conf:
-        env_file = '.env'
-        env_file_encoding = 'unf-8'
+
+        
 
 settings = Settings()
 
