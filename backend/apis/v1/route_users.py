@@ -9,7 +9,7 @@ from backend.core.hashing import Hasher
 
 router = APIRouter()
 
-@router.post('/', response_model=ShowUser, status_code=status.HTTP_201_CREATED)
+@router.post('/signup', response_model=ShowUser, status_code=status.HTTP_201_CREATED)
 async def create_user(body: UserCreate, db: AsyncSession = Depends(get_connection)):
 
     if await if_exist_user(body.email, db):

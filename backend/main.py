@@ -13,7 +13,7 @@ app = FastAPI(
         version=settings.PROJECT_VERSION
     )
 
-app.include_router(router=api_router, tags=['users'])
+app.include_router(router=api_router)
 
 @app.get('/')
 def hello_api():
