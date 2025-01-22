@@ -4,12 +4,17 @@ from backend.core.config import settings
 from sqlalchemy.ext.asyncio import AsyncSession
 from backend.db.connection import get_connection
 from sqlalchemy import text
+from backend.apis.base import api_router 
+
 
 
 app = FastAPI(
-    title=settings.PROJECT_NAME,
-    version=settings.PROJECT_VERSION
-)
+        title=settings.PROJECT_NAME,
+        version=settings.PROJECT_VERSION
+    )
+
+app.include_router(router=api_router, tags=['users'])
+
 @app.get('/')
 def hello_api():
     return {"msg":"Hello FastAPI"}
