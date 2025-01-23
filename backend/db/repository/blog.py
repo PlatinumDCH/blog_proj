@@ -39,3 +39,14 @@ async def update_blog(id:int, body: UpdateBlog, db: AsyncSession):
     await db.refresh(blog_in_db)
     return blog_in_db
 
+async def delete_a_blog(id:int, db:AsyncSession):
+    result = await db.execute(select(Blog).filter(Blog.id == id))
+    blog_in_id = result.scalar_one_or_none()
+    if not blog_in_id:
+        return {'error':f'Could not find blog with id {id}'}
+    
+    await db.delete(blog_in_id)
+    await db.commit()
+    
+    return {'msg':f'delete blog with id {id}'}
+

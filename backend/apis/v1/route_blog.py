@@ -5,7 +5,7 @@ from fastapi import Depends, HTTPException
 from backend.db.connection import get_connection
 from backend.schemas.blog import ShowBlog, CreateBlog, UpdateBlog
 from backend.db.repository.blog import create_new_blog, retreive_blog, list_blogs
-from backend.db.repository.blog import update_blog
+from backend.db.repository.blog import update_blog, delete_a_blog
 
 router = APIRouter()
 
@@ -39,6 +39,16 @@ async def update_a_blog(id:int, body:UpdateBlog, db:AsyncSession = Depends(get_c
             detail=f'blog with id {id} does not found'
         )
     return blog
+
+@router.delete('/delete/{id}')
+async def delete_a_blog(id:int, db: AsyncSession = Depends(get_connection)):
+    message = await delete_blog(id, db)
+    if message.get('error'):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=message.get('error')
+        )
+    return {'msg':f'Succesfullu deleted blog with id {id}'}
 
 
 
