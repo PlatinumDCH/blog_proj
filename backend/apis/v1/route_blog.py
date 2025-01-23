@@ -5,7 +5,7 @@ from fastapi import Depends, HTTPException
 from backend.db.connection import get_connection
 from backend.schemas.blog import ShowBlog, CreateBlog, UpdateBlog
 from backend.db.repository.blog import create_new_blog, retreive_blog, list_blogs
-from backend.db.repository.blog import update_blog, delete_a_blog
+from backend.db.repository.blog import update_blog, delete_blog
 
 router = APIRouter()
 
