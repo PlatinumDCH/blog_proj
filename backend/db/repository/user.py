@@ -1,7 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from backend.schemas.user import UserCreate
-from backend.models.base import User
+from backend.models.other import User
+from backend.core.hashing import Hasher
 
 from backend.db.connection import get_connection
 from fastapi import Depends
@@ -31,3 +32,19 @@ async def if_exist_user(email:str, db:AsyncSession = Depends(get_connection))->b
     result = await db.execute(query) #выполняем запрос
     user = result.scalar_one_or_none() #получаем рузультат
     return user is not None
+
+
+
+async def get_user(email:str,db: AsyncSession):
+    """return user, user email"""
+    result = await db.execute(select(User).filter(User.email == email))
+    user = result.scalar_one_or_none()
+    return user
+
+async def autenticate_user(email:str, passord:str, db:AsyncSession):
+    user = await get_user(email, db)
+    if not user:
+        return False
+    if not Hasher.verify_password(passord, user.password_hash):
+        return False
+    return user

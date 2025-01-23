@@ -8,7 +8,7 @@ api_router = APIRouter()
 api_router.include_router(
     route_users.router,
     prefix='',
-    tags=['users'])
+    tags=['auth'])
 
 
 api_router.include_router(

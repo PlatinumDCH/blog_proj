@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession 
 from backend.schemas.blog import CreateBlog, UpdateBlog
-from backend.models.base import Blog
+from backend.models.other import Blog
 from sqlalchemy import select
 from typing import Optional
 

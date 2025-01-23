@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 import asyncio
 from backend.main import app
 from backend.db.connection import get_connection
-from backend.models.base import BaseModel, User
+from backend.models.other import BaseModel, User
 
 SQLALCHEMY_DATABASE_URL = "sqlite+aiosqlite:///./test.db"
 
