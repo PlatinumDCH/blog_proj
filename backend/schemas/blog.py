@@ -31,3 +31,5 @@ class ShowBlog(BaseModel):
         if isinstance(value, datetime):
             return value.date()
         return value
+
+class UpdateBlog(CreateBlog): ...

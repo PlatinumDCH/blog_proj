@@ -3,8 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends, HTTPException
 
 from backend.db.connection import get_connection
-from backend.schemas.blog import ShowBlog, CreateBlog
+from backend.schemas.blog import ShowBlog, CreateBlog, UpdateBlog
 from backend.db.repository.blog import create_new_blog, retreive_blog, list_blogs
+from backend.db.repository.blog import update_blog
 
 router = APIRouter()
 
@@ -28,4 +29,16 @@ async def get_blog(id: int, db:AsyncSession = Depends(get_connection)):
             detail=f'Blog with id {id} does not exists'
         )
     return blog
+
+@router.put('/blog/{id}', response_model=ShowBlog)
+async def update_a_blog(id:int, body:UpdateBlog, db:AsyncSession = Depends(get_connection)):
+    blog = await update_blog(id, body, db)
+    if not blog:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f'blog with id {id} does not found'
+        )
+    return blog
+
+
 
