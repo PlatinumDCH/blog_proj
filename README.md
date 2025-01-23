@@ -1,9 +1,9 @@
-technology stack
-FronEnd: Jinja2, HTML, CSS, Bootstrap
-API: core FastAPI, RestAPI
-Pytest:
-Git/GitHub:
-sqlalchemy:
-alembic:
-Postgresql:
-Docker:
+technology stack:
+    FronEnd: Jinja2, HTML, CSS, Bootstrap
+    API: core FastAPI, RestAPI
+    Pytest:
+    Git/GitHub:
+    sqlalchemy:
+    alembic:
+    Postgresql:
+    Docker:
