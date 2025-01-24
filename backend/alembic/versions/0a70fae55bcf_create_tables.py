@@ -1,8 +1,8 @@
-"""refacrot models, add new t tokens
+"""create tables
 
-Revision ID: 7be37d4100aa
-Revises: 3e0a62cbb107
-Create Date: 2025-01-23 13:02:06.596201
+Revision ID: 0a70fae55bcf
+Revises: 
+Create Date: 2025-01-24 09:34:16.306035
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '7be37d4100aa'
-down_revision: Union[str, None] = '3e0a62cbb107'
+revision: str = '0a70fae55bcf'
+down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
