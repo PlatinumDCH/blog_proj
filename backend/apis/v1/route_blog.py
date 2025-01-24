@@ -4,25 +4,32 @@ from fastapi import Depends, HTTPException
 
 from backend.db.connection import get_connection
 from backend.schemas.blog import ShowBlog, CreateBlog, UpdateBlog
-from backend.db.repository.blog import create_new_blog, retreive_blog, list_blogs
-from backend.db.repository.blog import update_blog, delete_blog
-
+from backend.crud.blog import get_blog_crud , BlogCRUD
+from backend.models.base import User
+from backend.utils.security import auth_serv
 router = APIRouter()
 
 @router.post("/blogs",response_model=ShowBlog, status_code=status.HTTP_201_CREATED)
-async def create_blog(blog: CreateBlog, db: AsyncSession= Depends(get_connection)):
-    new_blog = await create_new_blog(blog=blog,db=db,author_id=1)
-    return new_blog
+async def create_blog(
+    body: CreateBlog, 
+    user:User = Depends(auth_serv.get_current_user), 
+    crud: BlogCRUD = Depends(get_blog_crud)):
+    """create blog by curent user"""
+    return await crud.create_new_blog(body, user)
 
 @router.get('/blogs', response_model=list[ShowBlog])
-async def get_all_blogs(db: AsyncSession = Depends(get_connection)):
-    """получить все записи пользователя"""
-    blogs = await list_blogs(db)
-    return blogs
+async def list_the_blogs(
+    user: User = Depends(auth_serv.get_current_user), 
+    crud:BlogCRUD = Depends(get_blog_crud)):
+    """get all blogs current user"""
+    return  await crud.list_blogs(user)
 
 @router.get('/blog/{id}', response_model=ShowBlog)
-async def get_blog(id: int, db:AsyncSession = Depends(get_connection)):
-    blog = await retreive_blog(id, db)
+async def read_blog(
+    id: int, 
+    user:User = Depends(auth_serv.get_current_user),
+    crud: BlogCRUD = Depends(get_blog_crud)):
+    blog = await crud.retreive_blog(id)
     if not blog:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -31,8 +38,12 @@ async def get_blog(id: int, db:AsyncSession = Depends(get_connection)):
     return blog
 
 @router.put('/blog/{id}', response_model=ShowBlog)
-async def update_a_blog(id:int, body:UpdateBlog, db:AsyncSession = Depends(get_connection)):
-    blog = await update_blog(id, body, db)
+async def update_blog(
+    id:int, 
+    body:UpdateBlog, 
+    user:User = Depends(auth_serv.get_current_user),
+    crud: BlogCRUD = Depends(get_blog_crud)):
+    blog = await crud.update_blog(id, body)
     if not blog:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -40,9 +51,12 @@ async def update_a_blog(id:int, body:UpdateBlog, db:AsyncSession = Depends(get_c
         )
     return blog
 
-@router.delete('/delete/{id}')
-async def delete_a_blog(id:int, db: AsyncSession = Depends(get_connection)):
-    message = await delete_blog(id, db)
+@router.delete('/del_blog/{id}')
+async def delete_a_blog(
+    id:int, 
+    user:User = Depends(auth_serv.get_current_user),
+    crud: BlogCRUD = Depends(get_blog_crud)):
+    message = await crud.delete_blog(id, user)
     if message.get('error'):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

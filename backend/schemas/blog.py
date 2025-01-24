@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, model_validator, field_validator
 from datetime import date, datetime
 
 
@@ -9,10 +9,10 @@ class CreateBlog(BaseModel):
     slug: str 
     content: Optional[str] = None 
     
-    @field_validator('title', 'slug', mode='before')
+    @model_validator(mode='before')
     @classmethod
     def generate_slug(cls, values):
-        if 'title' in values:
+        if 'title' in values and not values.get('slug'):
             values['slug'] = values.get("title").replace(" ","-").lower()
         return values
 

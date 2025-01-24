@@ -1,15 +1,18 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from backend.schemas.user import UserCreate
-from backend.models.other import User
-from backend.core.hashing import Hasher
+from backend.models.base import User
+from backend.utils.hashing import Hasher
 
 from backend.db.connection import get_connection
 from fastapi import Depends
 
-async def create_new_user(body:UserCreate, db:AsyncSession = Depends(get_connection)):
+
+
+
+async def create_new_user(body, db:AsyncSession):
     """
-    создать нового пользователя в базе данных
+    create new user in db
     Args:
         body (UserCreate): тело запроса из данными
         db (AsyncSession, optional): коннект с бд. Defaults to Depends(get_connection).
@@ -26,7 +29,7 @@ async def create_new_user(body:UserCreate, db:AsyncSession = Depends(get_connect
     await db.refresh(new_user)
     return new_user
 
-async def if_exist_user(email:str, db:AsyncSession = Depends(get_connection))->bool:
+async def if_exist_user(email:str, db: AsyncSession)->bool:
     """проверка что такого пользователя нету в базу данных"""
     query = select(User).filter(User.email == email)
     result = await db.execute(query) #выполняем запрос
@@ -38,7 +41,7 @@ async def if_exist_user(email:str, db:AsyncSession = Depends(get_connection))->b
 async def get_user(email:str,db: AsyncSession):
     """return user, user email"""
     result = await db.execute(select(User).filter(User.email == email))
-    user = result.scalar_one_or_none()
+    user = result.scalars().first()
     return user
 
 async def autenticate_user(email:str, passord:str, db:AsyncSession):
